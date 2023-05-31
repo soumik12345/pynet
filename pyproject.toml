@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "pynet"
+version = "0.1.0"
+description = "Tensorflow implementation of PyNet for mobile camera ISP"
+authors = ["Soumik Rakshit <19soumik.rakshit96@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+black = "^23.3.0"
+pre-commit = "^3.3.2"
+wandb = "^0.15.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
