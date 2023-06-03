@@ -76,6 +76,6 @@ class ZurichDatasetFactory:
 
     def get_datasets(self, batch_size: int):
         datasets = {}
-        for alias, paths in self.dataset_paths:
+        for alias, paths in self.dataset_paths.items():
             datasets[alias] = self._build_dataset(paths, batch_size)
         return datasets
