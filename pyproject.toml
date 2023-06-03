@@ -10,6 +10,7 @@ python = "^3.10"
 pre-commit = "^3.3.2"
 wandb = "^0.15.3"
 tensorflow-addons = "0.20.0"
+wandb-addons = { git = "https://github.com/soumik12345/wandb-addons.git" }
 
 [build-system]
 requires = ["poetry-core"]
