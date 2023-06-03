@@ -5,6 +5,10 @@ import tensorflow as tf
 
 from wandb_addons.utils import fetch_wandb_artifact
 
+from .utils import preprocess_raw_image
+
+_AUTOTUNE = tf.data.AUTOTUNE
+
 
 class ZurichDatasetFactory:
     def __init__(self, artifact_address: str, val_split: float = 0.2) -> None:
@@ -46,3 +50,32 @@ class ZurichDatasetFactory:
             "Validation": (val_raw_images, val_dslr_images),
             "Test": (test_raw_images, test_dslr_images),
         }
+
+    def preprocess_images(self, raw_image_file, dslr_image_file):
+        raw_image = tf.cast(
+            tf.image.decode_image(tf.io.read_file(raw_image_file)), dtype=tf.float32
+        )
+        dslr_image = tf.cast(
+            tf.image.decode_image(tf.io.read_file(dslr_image_file)), dtype=tf.float32
+        )
+
+        def _preprocess(_raw_image, _dslsr_image):
+            _raw_image = preprocess_raw_image(_raw_image.numpy())
+            _dslsr_image = _dslsr_image.numpy() / 255.0
+            return _raw_image, _dslsr_image
+
+        return tf.py_function(
+            _preprocess, [raw_image, dslr_image], [tf.float32, tf.float32]
+        )
+
+    def _build_dataset(self, dataset_paths, batch_size):
+        dataset = tf.data.Dataset.from_tensor_slices(dataset_paths)
+        dataset = dataset.map(self.preprocess_images, num_parallel_calls=_AUTOTUNE)
+        dataset = dataset.batch(batch_size, drop_remainder=True)
+        return dataset.prefetch(_AUTOTUNE)
+
+    def get_datasets(self, batch_size: int):
+        datasets = {}
+        for alias, paths in self.dataset_paths:
+            datasets[alias] = self._build_dataset(paths, batch_size)
+        return datasets
