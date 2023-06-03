@@ -1,2 +1,2 @@
-FROM mcr.microsoft.com/vscode/devcontainers/python:3.8
+FROM tensorflow/tensorflow
 COPY setup.sh /setup.sh
