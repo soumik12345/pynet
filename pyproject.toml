@@ -6,7 +6,7 @@ authors = ["Soumik Rakshit <19soumik.rakshit96@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 pre-commit = "^3.3.2"
 wandb = "^0.15.3"
 tensorflow-addons = "0.20.0"

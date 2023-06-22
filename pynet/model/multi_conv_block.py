@@ -15,7 +15,7 @@ class MultiConvolutionBlock(keras.layers.Layer):
         self.conv_3a = ConvLayer(filters=filters, kernel_size=3, apply_norm=apply_norm)
         self.conv_3b = ConvLayer(filters=filters, kernel_size=3, apply_norm=apply_norm)
 
-        if max_conv_size > 5:
+        if max_conv_size >= 5:
             self.conv_5a = ConvLayer(
                 filters=filters, kernel_size=5, apply_norm=apply_norm
             )
@@ -23,7 +23,7 @@ class MultiConvolutionBlock(keras.layers.Layer):
                 filters=filters, kernel_size=5, apply_norm=apply_norm
             )
 
-        if max_conv_size > 7:
+        if max_conv_size >= 7:
             self.conv_7a = ConvLayer(
                 filters=filters, kernel_size=7, apply_norm=apply_norm
             )
@@ -31,7 +31,7 @@ class MultiConvolutionBlock(keras.layers.Layer):
                 filters=filters, kernel_size=7, apply_norm=apply_norm
             )
 
-        if max_conv_size > 9:
+        if max_conv_size >= 9:
             self.conv_9a = ConvLayer(
                 filters=filters, kernel_size=9, apply_norm=apply_norm
             )
