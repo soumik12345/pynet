@@ -60,7 +60,7 @@ class ModelTester(unittest.TestCase):
 
     def test_pynet(self) -> None:
         input_tensor = tf.ones((1,224,224,4))
-        model = PyNet(apply_norm=True, apply_norm_l1=False, use_sigmoid=True)
+        model = PyNet(apply_norm=True, apply_norm_l1=False, use_sigmoid=True, return_lower_level_outputs=True)
         l0_out_final, l1_out_final, l2_out_final, l3_out_final, l4_out_final, l5_out_final = model(input_tensor)
         self.assertEqual(l0_out_final.shape,(1,448,448,3))
         self.assertEqual(l1_out_final.shape,(1,224,224,3))
@@ -68,6 +68,12 @@ class ModelTester(unittest.TestCase):
         self.assertEqual(l3_out_final.shape,(1,56,56,3))
         self.assertEqual(l4_out_final.shape,(1,28,28,3))
         self.assertEqual(l5_out_final.shape,(1,14,14,3))
+
+    def test_pynet_single_output(self) -> None:
+        input_tensor = tf.ones((1,224,224,4))
+        model = PyNet(apply_norm=True, apply_norm_l1=False, use_sigmoid=True, return_lower_level_outputs=False)
+        l0_out_final = model(input_tensor)
+        self.assertEqual(l0_out_final.shape,(1,448,448,3))
 
 
 if __name__ == '__main__':
