@@ -165,3 +165,7 @@ cython_debug/
 # WandB
 wandb/
 artifacts/
+
+# Extras
+*.pdf
+*.ipynb

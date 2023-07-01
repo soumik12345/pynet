@@ -50,9 +50,9 @@ class UpSampleConvLayer(keras.layers.Layer):
         )
         self.reflection_padding = ReflectionPadding2D(padding=kernel_size // 2)
         self.convolution = keras.layers.Conv2D(
-            filters, kernel_size, strides, padding="same"
+            filters, kernel_size, strides
         )
-        self.activation = keras.layers.ReLU() if apply_activation else None
+        self.activation = keras.layers.LeakyReLU(alpha=0.2) if apply_activation else None
 
     def get_config(self):
         config = super().get_config()
@@ -96,7 +96,7 @@ class ConvLayer(keras.layers.Layer):
 
         self.reflection_padding = ReflectionPadding2D(padding=kernel_size // 2)
         self.convolution = keras.layers.Conv2D(
-            filters, kernel_size, strides, padding="same"
+            filters, kernel_size, strides 
         )
         self.activation = (
             keras.layers.LeakyReLU(alpha=0.2) if apply_activation else None
