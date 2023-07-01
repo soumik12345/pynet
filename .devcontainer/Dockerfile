@@ -1,2 +1,2 @@
-FROM tensorflow/tensorflow:2.12.0
-COPY setup.sh /usr/src/setup.sh
+FROM mcr.microsoft.com/vscode/devcontainers/python:3.9
+COPY setup.sh /setup.sh
