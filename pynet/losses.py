@@ -28,7 +28,7 @@ class PerceptualLoss(keras.losses.Loss):
         """Reference: https://github.com/srihari-humbarwadi/srgan_tensorflow/blob/master/losses.py#L4"""
         super().__init__(*args, **kwargs)
         self.rescale_inputs = rescale_inputs
-        self.mean_squared_error = keras.losses.MeanSquaredError(reduction=None)
+        self.mean_squared_error = keras.losses.MeanSquaredError(reduction="none")
         vgg = keras.applications.VGG19(include_top=False)
         vgg.trainable = False
         # Getting rid of the final pooling layer of VGG19
