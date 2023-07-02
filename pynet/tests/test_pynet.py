@@ -1,6 +1,9 @@
 import unittest
+
 import tensorflow as tf
-from pynet.model.modules import level_5, level_4, level_3, level_2, level_1, level_0
+
+from pynet.model.modules import (level_0, level_1, level_2, level_3, level_4,
+                                 level_5)
 from pynet.model.pynet import PyNet
 
 
