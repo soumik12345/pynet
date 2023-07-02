@@ -1,4 +1,5 @@
 import tensorflow as tf
+from keras.utils import losses_utils
 from tensorflow import keras
 
 
@@ -30,3 +31,31 @@ class MultiScaleSSIMLoss(keras.losses.Loss):
         return tf.reduce_mean(
             tf.image.ssim_multiscale(y_true, y_pred, max_val=self.max_val)
         )
+
+
+class PerceptualLoss(keras.losses.Loss):
+    def __init__(
+        self, rescale_inputs: bool, reduction=losses_utils.ReductionV2.AUTO, name=None
+    ):
+        """Reference: https://github.com/srihari-humbarwadi/srgan_tensorflow/blob/master/losses.py#L4"""
+        super().__init__(reduction, name)
+        self.rescale_inputs = rescale_inputs
+        self.mean_squared_error = keras.losses.MeanSquaredError(reduction=None)
+        vgg = keras.applications.VGG19(include_top=False)
+        vgg.trainable = False
+        # Getting rid of the final pooling layer of VGG19
+        self.vgg_feature_model = keras.Model(
+            vgg.input, vgg.get_layer("block5_conv4").output
+        )
+
+    def call(self, y_true, y_pred):
+        if self.rescale_inputs:
+            y_true = y_true * 255.0
+            y_pred = y_pred * 255.0
+        y_true_features = self.vgg_feature_model(
+            keras.applications.vgg19.preprocess_input(y_true)
+        )
+        y_pred_features = self.vgg_feature_model(
+            keras.applications.vgg19.preprocess_input(y_pred)
+        )
+        return tf.reduce_mean(self.mean_squared_error(y_true, y_pred))
