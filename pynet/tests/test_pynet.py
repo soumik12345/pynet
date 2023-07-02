@@ -102,7 +102,3 @@ class ModelTester(unittest.TestCase):
         )
         l0_out_final = model(input_tensor)
         self.assertEqual(l0_out_final.shape, (1, 448, 448, 3))
-
-
-if __name__ == "__main__":
-    unittest.main()
