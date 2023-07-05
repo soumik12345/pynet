@@ -46,4 +46,4 @@ class PerceptualLoss(keras.losses.Loss):
         y_pred_features = self.vgg_feature_model(
             keras.applications.vgg19.preprocess_input(y_pred)
         )
-        return tf.reduce_mean(self.mean_squared_error(y_true, y_pred))
+        return self.mean_squared_error(y_true_features, y_pred_features)
