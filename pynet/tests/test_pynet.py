@@ -7,6 +7,13 @@ from pynet.model.pynet import PyNet
 
 
 class ModelTester(unittest.TestCase):
+    def __init__(self, methodName: str = "runTest") -> None:
+        super().__init__(methodName)
+        l4_pool = tf.ones((1, 14, 14, 256))
+        l4_out_1 = tf.ones((1,28,28,256))
+        l5_pass_a = tf.ones((1,28,28,256))
+        l5_pass_b = tf.ones((1,28,28,256))
+        ...
     def test_level_5(self) -> None:
         use_sigmoid = True
         l4_pool = tf.ones((1, 14, 14, 256))
