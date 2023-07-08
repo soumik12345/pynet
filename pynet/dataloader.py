@@ -3,9 +3,7 @@ from glob import glob
 
 import tensorflow as tf
 
-from wandb_addons.utils import fetch_wandb_artifact
-
-from .utils import preprocess_raw_image
+from .utils import fetch_wandb_artifact, preprocess_raw_image
 
 _AUTOTUNE = tf.data.AUTOTUNE
 

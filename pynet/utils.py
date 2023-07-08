@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import wandb
 
 
 def preprocess_raw_image(raw_image):
@@ -27,3 +28,11 @@ def initialize_gpus():
         except RuntimeError as e:
             # Memory growth must be set before GPUs have been initialized
             print(e)
+
+
+def fetch_wandb_artifact(artifact_address: str, artifact_type: str):
+    return (
+        wandb.Api().artifact(artifact_address, type=artifact_type).download()
+        if wandb.run is None
+        else wandb.use_artifact(artifact_address, type=artifact_type).download()
+    )
