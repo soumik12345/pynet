@@ -11,7 +11,7 @@ on:
 jobs:
   unit-test-model:
     runs-on: ubuntu-latest
-    container: tensorflow/tensorflow
+    container: tensorflow/tensorflow:latest
     steps:
       - uses: actions/checkout@v2
       - run: |
