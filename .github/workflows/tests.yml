@@ -11,19 +11,19 @@ on:
 jobs:
   unit-test-model:
     runs-on: ubuntu-latest
-    container: tensorflow/tensorflow
     steps:
       - uses: actions/checkout@v2
       - run: |
           pip install -U pip
-          pip install -e ".[dev]"
+          pip install -e .
+          pip install tensorflow==2.11.0
           python -m pytest -s pynet/tests/test_pynet.py
   unit-test-losses:
     runs-on: ubuntu-latest
-    container: tensorflow/tensorflow
     steps:
       - uses: actions/checkout@v2
       - run: |
           pip install -U pip
-          pip install -e ".[dev]"
+          pip install -e .
+          pip install tensorflow==2.11.0
           python -m pytest -s pynet/tests/test_losses.py
