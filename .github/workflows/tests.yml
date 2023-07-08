@@ -20,7 +20,7 @@ jobs:
           python -m pytest -s pynet/tests/test_pynet.py
   unit-test-losses:
     runs-on: ubuntu-latest
-    container: tensorflow/tensorflow
+    container: tensorflow/tensorflow:2.11.0
     steps:
       - uses: actions/checkout@v2
       - run: |
