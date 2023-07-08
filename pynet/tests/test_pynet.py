@@ -1,9 +1,11 @@
+import os
 import unittest
 
 import tensorflow as tf
+from tensorflow import keras
 
-from pynet.model.modules import level_0, level_1, level_2, level_3, level_4, level_5
 from pynet.model import PyNet
+from pynet.model.modules import level_0, level_1, level_2, level_3, level_4, level_5
 
 
 class ModelTester(unittest.TestCase):
@@ -111,3 +113,14 @@ class ModelTester(unittest.TestCase):
         )
         l0_out_final = model(self.pynet_input)
         self.assertEqual(l0_out_final.shape, (1, 448, 448, 3))
+
+    def test_pynet_save(self) -> None:
+        model = PyNet(
+            apply_norm=True,
+            apply_norm_l1=False,
+            use_sigmoid=True,
+            return_lower_level_outputs=True,
+        )
+        model.save_weights("model.h5")
+        model.load_weights("model.h5")
+        os.remove("model.h5")

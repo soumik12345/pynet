@@ -16,6 +16,30 @@ class PyNet(keras.Model):
         *args,
         **kwargs
     ):
+        super().__init__(*args, **kwargs)
+
+        self.network = self.build_network(
+            input_size,
+            apply_norm,
+            apply_norm_l1,
+            use_sigmoid,
+            return_lower_level_outputs,
+        )
+
+        self.input_size = input_size
+        self.apply_norm = apply_norm
+        self.apply_norm_l1 = apply_norm_l1
+        self.use_sigmoid = use_sigmoid
+        self.return_lower_level_outputs = return_lower_level_outputs
+
+    def build_network(
+        self,
+        input_size,
+        apply_norm,
+        apply_norm_l1,
+        use_sigmoid,
+        return_lower_level_outputs,
+    ):
         inputs = tf.keras.Input((input_size, input_size, 4))
         # First pass for calculating level 2,3,4,5 inputs
         # Level 1 first block out
@@ -76,8 +100,8 @@ class PyNet(keras.Model):
         )  # 224x224x3 Final out shape
         l0_out_final = level_0(l1_pass, use_sigmoid)  # 448x448
 
-        if return_lower_level_outputs == True:
-            outputs = [
+        outputs = (
+            [
                 l0_out_final,
                 l1_out_final,
                 l2_out_final,
@@ -85,16 +109,11 @@ class PyNet(keras.Model):
                 l4_out_final,
                 l5_out_final,
             ]
-        else:
-            outputs = l0_out_final
+            if return_lower_level_outputs
+            else l0_out_final
+        )
 
-        super().__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
-
-        self.input_size = input_size
-        self.apply_norm = apply_norm
-        self.apply_norm_l1 = apply_norm_l1
-        self.use_sigmoid = use_sigmoid
-        self.return_lower_level_outputs = return_lower_level_outputs
+        return keras.Model(inputs, outputs)
 
     def get_config(self):
         return {
@@ -104,3 +123,12 @@ class PyNet(keras.Model):
             "use_sigmoid": self.use_sigmoid,
             "return_lower_level_outputs": self.return_lower_level_outputs,
         }
+
+    def call(self, inputs):
+        return self.network(inputs)
+
+    def save_weights(self, filepath, overwrite=True, save_format=None, options=None):
+        self.network.save_weights(filepath, overwrite, save_format, options)
+
+    def load_weights(self, filepath, skip_mismatch=False, by_name=False, options=None):
+        self.network.load_weights(filepath, skip_mismatch, by_name, options)
