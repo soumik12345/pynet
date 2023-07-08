@@ -16,7 +16,7 @@ jobs:
       - run: |
           pip install -U pip
           pip install -e .
-          pip install --upgrade tensorflow
+          pip install tensorflow==2.11.0
           python -m pytest -s pynet/tests/test_pynet.py
   unit-test-losses:
     runs-on: ubuntu-latest
@@ -25,5 +25,5 @@ jobs:
       - run: |
           pip install -U pip
           pip install -e .
-          pip install --upgrade tensorflow
+          pip install tensorflow==2.11.0
           python -m pytest -s pynet/tests/test_losses.py
