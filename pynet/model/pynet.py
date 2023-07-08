@@ -132,3 +132,62 @@ class PyNet(keras.Model):
 
     def load_weights(self, filepath, skip_mismatch=False, by_name=False, options=None):
         self.network.load_weights(filepath, skip_mismatch, by_name, options)
+
+    def compile(
+        self,
+        mse_loss: keras.losses.Loss,
+        perceptual_loss: keras.losses.Loss,
+        ssim_loss: keras.losses.Loss,
+        *args,
+        **kwargs
+    ):
+        self.mean_squared_error = mse_loss
+        self.perceptual_loss = perceptual_loss
+        self.ssim_loss = ssim_loss
+        super().compile(*args, **kwargs)
+
+    def compute_losses(self, ground_truth, outputs):
+        (
+            l0_out_final,
+            l1_out_final,
+            l2_out_final,
+            l3_out_final,
+            l4_out_final,
+            l5_out_final,
+        ) = outputs
+        l5_loss = self.mean_squared_error(ground_truth, l5_out_final)
+        l4_loss = self.mean_squared_error(ground_truth, l4_out_final)
+        l3_loss = 10.0 * self.mean_squared_error(
+            ground_truth, l3_out_final
+        ) + self.perceptual_loss(ground_truth, l3_out_final)
+        l2_loss = 10.0 * self.mean_squared_error(
+            ground_truth, l2_out_final
+        ) + self.perceptual_loss(ground_truth, l2_out_final)
+        l1_loss = 10.0 * self.mean_squared_error(
+            ground_truth, l1_out_final
+        ) + self.perceptual_loss(ground_truth, l1_out_final)
+        l0_loss = (
+            self.mean_squared_error(ground_truth, l0_out_final)
+            + self.perceptual_loss(ground_truth, l0_out_final)
+            + 0.4 * (1 - self.ssim_loss(ground_truth, l0_out_final))
+        )
+        total_loss = l0_loss + l1_loss + l2_loss + l3_loss + l4_loss + l5_loss
+        return {
+            "l0_loss": l0_loss,
+            "l1_loss": l1_loss,
+            "l2_loss": l2_loss,
+            "l3_loss": l3_loss,
+            "l4_loss": l4_loss,
+            "l5_loss": l5_loss,
+            "total_loss": total_loss,
+        }
+
+    def train_step(self, data):
+        inputs, ground_truth = data
+        with tf.GradientTape() as tape:
+            outputs = self.network(inputs)
+            losses = self.compute_losses(ground_truth, outputs)
+
+        gradients = tape.gradient(losses["total_loss"], self.network.trainable_weights)
+        self.optimizer.apply_gradients(zip(gradients, self.network.trainable_weights))
+        return losses
