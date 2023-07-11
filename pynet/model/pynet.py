@@ -278,7 +278,8 @@ class PyNet(keras.Model):
         inputs, ground_truths = data
         outputs = self.network(inputs)
         losses = self.compute_eval_losses(ground_truths, outputs)
-        
+        return losses
+
        
 
 
