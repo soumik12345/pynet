@@ -199,8 +199,8 @@ class PyNet(keras.Model):
 
         gradients = tape.gradient(losses["total_loss"], self.network.trainable_weights)
         self.optimizer.apply_gradients(zip(gradients, self.network.trainable_weights))
-        return 
-    
+        return
+
     def compute_eval_losses(self, ground_truths, outputs):
         (
             l0_out_final,
@@ -236,7 +236,7 @@ class PyNet(keras.Model):
         # SSIM for Level 0 and Level 1
         l0_ssim = self.ssim_loss(l0_ground_truth, l0_out_final)
         l1_ssim = self.ssim_loss(l1_ground_truth, l1_out_final)
-        
+
         # Perceptual loss for Level 0, 1, 2, 3, 4
         l0_perceptual_loss = self.perceptual_loss(l0_ground_truth, l0_out_final)
         l1_perceptual_loss = self.perceptual_loss(l1_ground_truth, l1_out_final)
@@ -245,33 +245,30 @@ class PyNet(keras.Model):
         l4_perceptual_loss = self.perceptual_loss(l4_ground_truth, l4_out_final)
 
         return {
-            "mse_losses":[
+            "mse_losses": [
                 l0_mse_loss,
                 l1_mse_loss,
-                l2_mse_loss, 
-                l3_mse_loss, 
-                l4_mse_loss, 
-                l5_mse_loss 
+                l2_mse_loss,
+                l3_mse_loss,
+                l4_mse_loss,
+                l5_mse_loss,
             ],
-            "psnr_losses":[
+            "psnr_losses": [
                 l0_loss_psnr,
                 l1_loss_psnr,
                 l2_loss_psnr,
                 l3_loss_psnr,
                 l4_loss_psnr,
-                l5_loss_psnr 
+                l5_loss_psnr,
             ],
-            "ssim_losses":[
-                l0_ssim,
-                l1_ssim
-            ],
-            "perceptual_losses":[
+            "ssim_losses": [l0_ssim, l1_ssim],
+            "perceptual_losses": [
                 l0_perceptual_loss,
                 l1_perceptual_loss,
                 l2_perceptual_loss,
                 l3_perceptual_loss,
-                l4_perceptual_loss
-            ]
+                l4_perceptual_loss,
+            ],
         }
 
     def test_step(self, data):
@@ -279,7 +276,3 @@ class PyNet(keras.Model):
         outputs = self.network(inputs)
         losses = self.compute_eval_losses(ground_truths, outputs)
         return losses
-
-       
-
-
