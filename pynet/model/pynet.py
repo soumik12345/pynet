@@ -3,6 +3,7 @@ from tensorflow import keras
 import math
 from .modules import level_0, level_1, level_2, level_3, level_4, level_5
 from .multi_conv_block import MultiConvolutionBlock
+from pynet.losses import MultiScaleSSIMLoss, PerceptualLoss
 
 
 class PyNet(keras.Model):
@@ -135,9 +136,9 @@ class PyNet(keras.Model):
 
     def compile(
         self,
-        mse_loss: keras.losses.Loss,
-        perceptual_loss: keras.losses.Loss,
-        ssim_loss: keras.losses.Loss,
+        mse_loss: keras.losses.Loss = keras.losses.MeanSquaredError(),
+        perceptual_loss: keras.losses.Loss = PerceptualLoss(),
+        ssim_loss: keras.losses.Loss = MultiScaleSSIMLoss(),
         *args,
         **kwargs
     ):
@@ -245,30 +246,29 @@ class PyNet(keras.Model):
         l4_perceptual_loss = self.perceptual_loss(l4_ground_truth, l4_out_final)
 
         return {
-            "mse_losses": [
-                l0_mse_loss,
-                l1_mse_loss,
-                l2_mse_loss,
-                l3_mse_loss,
-                l4_mse_loss,
-                l5_mse_loss,
-            ],
-            "psnr_losses": [
-                l0_loss_psnr,
-                l1_loss_psnr,
-                l2_loss_psnr,
-                l3_loss_psnr,
-                l4_loss_psnr,
-                l5_loss_psnr,
-            ],
-            "ssim_losses": [l0_ssim, l1_ssim],
-            "perceptual_losses": [
-                l0_perceptual_loss,
-                l1_perceptual_loss,
-                l2_perceptual_loss,
-                l3_perceptual_loss,
-                l4_perceptual_loss,
-            ],
+            # MSE Loss
+            "l0_mse_loss": l0_mse_loss,
+            "l1_mse_loss": l1_mse_loss,
+            "l2_mse_loss": l2_mse_loss,
+            "l3_mse_loss": l3_mse_loss,
+            "l4_mse_loss": l4_mse_loss,
+            "l5_mse_loss": l5_mse_loss,
+            # PSNR Loss
+            "l0_loss_psnr": l0_loss_psnr,
+            "l1_loss_psnr": l1_loss_psnr,
+            "l2_loss_psnr": l2_loss_psnr,
+            "l3_loss_psnr": l3_loss_psnr,
+            "l4_loss_psnr": l4_loss_psnr,
+            "l5_loss_psnr": l5_loss_psnr,
+            # SSIM Loss
+            "l0_ssim": l0_ssim,
+            "l1_ssim": l1_ssim,
+            # Perceptual Loss
+            "l0_perceptual_loss": l0_perceptual_loss,
+            "l1_perceptual_loss": l1_perceptual_loss,
+            "l2_perceptual_loss": l2_perceptual_loss,
+            "l3_perceptual_loss": l3_perceptual_loss,
+            "l4_perceptual_loss": l4_perceptual_loss,
         }
 
     def test_step(self, data):
