@@ -1,5 +1,8 @@
+import os
+os.environ["KERAS_BACKEND"] = "tensorflow"
+
 import tensorflow as tf
-from tensorflow import keras
+import keras_core as keras
 
 from .layers import ConvLayer
 
@@ -55,14 +58,14 @@ class MultiConvolutionBlock(keras.layers.Layer):
 
         if self.max_conv_size >= 5:
             out_5 = self.conv_5b(self.conv_5a(inputs))
-            outputs = tf.concat([outputs, out_5], axis=-1)
+            outputs = keras.layers.Concatenate(axis=-1)([outputs, out_5])
 
         if self.max_conv_size >= 7:
             out_7 = self.conv_7b(self.conv_7a(inputs))
-            outputs = tf.concat([outputs, out_7], axis=-1)
+            outputs = keras.layers.Concatenate(axis=-1)([outputs, out_7])
 
         if self.max_conv_size >= 9:
             out_9 = self.conv_9b(self.conv_9a(inputs))
-            outputs = tf.concat([outputs, out_9], axis=-1)
+            outputs = keras.layers.Concatenate(axis=-1)([outputs, out_9])
 
         return outputs
