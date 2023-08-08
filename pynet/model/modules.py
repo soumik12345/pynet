@@ -1,9 +1,9 @@
 import os
+
 os.environ["KERAS_BACKEND"] = "tensorflow"
 
 import tensorflow as tf
 import keras_core as keras
-import tensorflow_addons as tfa
 
 from .layers import ConvLayer, UpSampleConvLayer
 from .multi_conv_block import MultiConvolutionBlock

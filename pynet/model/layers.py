@@ -1,10 +1,9 @@
 import os
+
 os.environ["KERAS_BACKEND"] = "tensorflow"
 
 import tensorflow as tf
 import keras_core as keras
-
-import tensorflow_addons as tfa
 
 
 class ReflectionPadding2D(keras.layers.Layer):
@@ -102,7 +101,9 @@ class ConvLayer(keras.layers.Layer):
         self.activation = (
             keras.layers.LeakyReLU(alpha=0.2) if apply_activation else None
         )
-        self.norm = tfa.layers.InstanceNormalization() if self.apply_norm else None
+        self.norm = (
+            keras.layers.GroupNormalization(groups=filters) if self.apply_norm else None
+        )
 
     def get_config(self):
         config = super().get_config()
