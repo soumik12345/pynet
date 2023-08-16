@@ -1,5 +1,9 @@
+import os
+
+os.environ["KERAS_BACKEND"] = "tensorflow"
+
 import tensorflow as tf
-from tensorflow import keras
+import keras_core as keras
 
 
 class SSIMLoss(keras.losses.Loss):

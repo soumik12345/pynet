@@ -1,5 +1,8 @@
+import os
+
+os.environ["KERAS_BACKEND"] = "tensorflow"
 import tensorflow as tf
-from tensorflow import keras
+import keras_core as keras
 import math
 from .modules import level_0, level_1, level_2, level_3, level_4, level_5
 from .multi_conv_block import MultiConvolutionBlock
@@ -41,7 +44,7 @@ class PyNet(keras.Model):
         use_sigmoid,
         return_lower_level_outputs,
     ):
-        inputs = tf.keras.Input((input_size, input_size, 4))
+        inputs = keras.Input((input_size, input_size, 4))
         # First pass for calculating level 2,3,4,5 inputs
         # Level 1 first block out
         l1_out_1 = MultiConvolutionBlock(

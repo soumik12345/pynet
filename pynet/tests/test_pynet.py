@@ -1,8 +1,10 @@
 import os
 import unittest
 
+os.environ["KERAS_BACKEND"] = "tensorflow"
+
 import tensorflow as tf
-from tensorflow import keras
+import keras_core as keras
 
 from pynet.model import PyNet
 from pynet.model.modules import level_0, level_1, level_2, level_3, level_4, level_5
@@ -121,6 +123,8 @@ class ModelTester(unittest.TestCase):
             use_sigmoid=True,
             return_lower_level_outputs=True,
         )
-        model.save_weights("model.h5")
-        model.load_weights("model.h5")
-        os.remove("model.h5")
+        l0_out_final = model(self.pynet_input)
+        model.save("model.keras")
+        keras.models.load_model("model.keras")
+        # model.load("model.keras")
+        os.remove("model.keras")

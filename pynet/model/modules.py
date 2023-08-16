@@ -1,6 +1,9 @@
+import os
+
+os.environ["KERAS_BACKEND"] = "tensorflow"
+
 import tensorflow as tf
-from tensorflow import keras
-import tensorflow_addons as tfa
+import keras_core as keras
 
 from .layers import ConvLayer, UpSampleConvLayer
 from .multi_conv_block import MultiConvolutionBlock
@@ -46,7 +49,7 @@ def level_4(
     # Expected Output shape for image of 224x224 -> 224/2**(3) -> 28x28x3
     # Input->28x28x256
     # Concat layer
-    l4_cat_1 = tf.concat([l4_out_1, l5_pass_a], -1)
+    l4_cat_1 = keras.layers.Concatenate(axis=-1)([l4_out_1, l5_pass_a])
     l4_out_2 = MultiConvolutionBlock(
         filters=256, max_conv_size=3, apply_norm=apply_norm
     )(l4_cat_1)
@@ -66,7 +69,7 @@ def level_4(
         filters=256, max_conv_size=3, apply_norm=apply_norm
     )(l4_out_4)
     # Concat layer
-    l4_cat_2 = tf.concat([l4_out_5, l5_pass_b], -1)
+    l4_cat_2 = keras.layers.Concatenate(axis=-1)([l4_out_5, l5_pass_b])
     l4_out_6 = MultiConvolutionBlock(
         filters=256, max_conv_size=3, apply_norm=apply_norm
     )(l4_cat_2)
@@ -96,7 +99,7 @@ def level_3(
     # Expected Output shape for image of 224x224 -> 224/2**(2) -> 56x56x3
     # Input->56x56x128
     # Concat layer
-    l3_cat_1 = tf.concat([l3_out_1, l4_pass_a], -1)
+    l3_cat_1 = keras.layers.Concatenate(axis=-1)([l3_out_1, l4_pass_a])
     l3_out_2 = (
         MultiConvolutionBlock(filters=128, max_conv_size=5, apply_norm=apply_norm)(
             l3_cat_1
@@ -119,7 +122,7 @@ def level_3(
         filters=128, max_conv_size=5, apply_norm=apply_norm
     )(l3_out_4)
     # Concat layer
-    l3_cat_2 = tf.concat([l3_out_5, l3_out_1, l4_pass_b], -1)
+    l3_cat_2 = keras.layers.Concatenate(axis=-1)([l3_out_5, l3_out_1, l4_pass_b])
     l3_out_6 = MultiConvolutionBlock(
         filters=128, max_conv_size=3, apply_norm=apply_norm
     )(l3_cat_2)
@@ -148,13 +151,13 @@ def level_2(
 ):
     # Expected Output shape for image of 224x224 -> 224/2**(1) -> 112x112x3
     # Input->112x112x64
-    l2_cat_1 = tf.concat([l2_out_1, l3_pass_a], -1)
+    l2_cat_1 = keras.layers.Concatenate(axis=-1)([l2_out_1, l3_pass_a])
     l2_out_2 = MultiConvolutionBlock(
         filters=64, max_conv_size=5, apply_norm=apply_norm
     )(l2_cat_1)
 
     # Concat layer
-    l2_cat_2 = tf.concat([l2_out_2, l2_out_1], -1)
+    l2_cat_2 = keras.layers.Concatenate(axis=-1)([l2_out_2, l2_out_1])
     l2_out_3 = (
         MultiConvolutionBlock(filters=64, max_conv_size=7, apply_norm=apply_norm)(
             l2_cat_2
@@ -178,12 +181,12 @@ def level_2(
     )(l2_out_5)
 
     # Concat layer
-    l2_cat_3 = tf.concat([l2_out_6, l2_out_1], -1)
+    l2_cat_3 = keras.layers.Concatenate(axis=-1)([l2_out_6, l2_out_1])
     l2_out_7 = MultiConvolutionBlock(
         filters=64, max_conv_size=5, apply_norm=apply_norm
     )(l2_cat_3)
     # Concat layer
-    l2_cat_4 = tf.concat([l2_out_7, l3_pass_b], -1)
+    l2_cat_4 = keras.layers.Concatenate(axis=-1)([l2_out_7, l3_pass_b])
     l2_out_8 = MultiConvolutionBlock(
         filters=64, max_conv_size=3, apply_norm=apply_norm
     )(l2_cat_4)
@@ -212,13 +215,13 @@ def level_1(
 ):
     # Expected Output shape for image of 224x224 -> 224/2**(0) -> 224x224x3
     # Input->224x224x32
-    l1_cat_1 = tf.concat([l1_out_1, l2_pass_a], -1)
+    l1_cat_1 = keras.layers.Concatenate(axis=-1)([l1_out_1, l2_pass_a])
     l1_out_2 = MultiConvolutionBlock(
         filters=32, max_conv_size=5, apply_norm=apply_norm
     )(l1_cat_1)
 
     # Concat layer
-    l1_cat_2 = tf.concat([l1_out_2, l1_out_1], -1)
+    l1_cat_2 = keras.layers.Concatenate(axis=-1)([l1_out_2, l1_out_1])
     l1_out_3 = MultiConvolutionBlock(
         filters=32, max_conv_size=7, apply_norm=apply_norm
     )(l1_cat_2)
@@ -248,12 +251,12 @@ def level_1(
     )(l1_out_7)
 
     # Concat layer
-    l1_cat_3 = tf.concat([l1_out_8, l1_out_1], -1)
+    l1_cat_3 = keras.layers.Concatenate(axis=-1)([l1_out_8, l1_out_1])
     l1_out_9 = MultiConvolutionBlock(
         filters=32, max_conv_size=5, apply_norm=apply_norm
     )(l1_cat_3)
     # Concat layer
-    l1_cat_4 = tf.concat([l1_out_9, l1_out_1, l2_pass_b], -1)
+    l1_cat_4 = keras.layers.Concatenate(axis=-1)([l1_out_9, l1_out_1, l2_pass_b])
     l1_out_10 = MultiConvolutionBlock(
         filters=32, max_conv_size=3, apply_norm=apply_norm
     )(l1_cat_4)
